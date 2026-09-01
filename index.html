@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Retirement Calculator</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <h1>Retirement Calculator</h1>
+      <p class="subtitle">See if you're on track — and how long your money will last.</p>
+    </header>
+
+    <div class="layout">
+      <form id="calc-form" class="panel">
+        <div class="panel-header">
+          <h2 class="panel-title">Your Details</h2>
+          <button type="button" id="collapseInputsBtn" class="icon-btn" title="Minimize inputs" aria-label="Minimize inputs">‹</button>
+        </div>
+        <button type="button" id="expandInputsBtn" class="icon-btn expand-btn" title="Expand inputs" aria-label="Expand inputs">›</button>
+        <div class="calc-form-body">
+        <nav class="tabs" role="tablist">
+          <button type="button" class="tab active" data-tab="personal">Personal</button>
+          <button type="button" class="tab" data-tab="wealth">Wealth Sources</button>
+          <button type="button" class="tab" data-tab="debts">Debts</button>
+          <button type="button" class="tab" data-tab="income">Income</button>
+          <button type="button" class="tab" data-tab="accounts">Retirement Accounts</button>
+          <button type="button" class="tab" data-tab="healthcare">Healthcare</button>
+          <button type="button" class="tab" data-tab="goals">Goals</button>
+        </nav>
+
+        <div class="tab-panels">
+        <!-- Personal -->
+        <section class="tab-panel active" data-panel="personal">
+          <div class="grid">
+            <div class="field">
+              <label for="nickname">Nickname (used to name your saved file)</label>
+              <input type="text" id="nickname" maxlength="40" placeholder="e.g. alex" />
+            </div>
+            <div class="field">
+              <label for="currentAge">Current age</label>
+              <input type="number" id="currentAge" min="18" max="100" value="35" required />
+            </div>
+            <div class="field">
+              <label for="gender">Gender</label>
+              <select id="gender">
+                <option value="female">Female</option>
+                <option value="male" selected>Male</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="married">Marital status</label>
+              <select id="married">
+                <option value="single">Single</option>
+                <option value="married">Married</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="retireAge">Age you want to retire</label>
+              <input type="number" id="retireAge" min="30" max="90" value="65" required />
+            </div>
+            <div class="field">
+              <label for="lifeExpectancy">Plan money to last until age</label>
+              <input type="number" id="lifeExpectancy" min="60" max="110" value="90" required />
+            </div>
+            <div class="field spouse-field">
+              <label for="spouseAge">Spouse's current age</label>
+              <input type="number" id="spouseAge" min="18" max="100" value="35" />
+            </div>
+          </div>
+
+          <p class="panel-hint" style="margin-top: 18px;">Used for the tax estimate in the Year-by-Year table. US state rates are simplified representative top marginal rates, not exact brackets.</p>
+          <div class="grid">
+            <div class="field">
+              <label for="country">Country</label>
+              <select id="country">
+                <option value="usa" selected>United States</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="field usa-field">
+              <label for="state">State</label>
+              <select id="state">
+                <option value="AL">Alabama</option>
+                <option value="AK">Alaska</option>
+                <option value="AZ">Arizona</option>
+                <option value="AR">Arkansas</option>
+                <option value="CA">California</option>
+                <option value="CO">Colorado</option>
+                <option value="CT">Connecticut</option>
+                <option value="DE">Delaware</option>
+                <option value="DC">District of Columbia</option>
+                <option value="FL">Florida</option>
+                <option value="GA">Georgia</option>
+                <option value="HI">Hawaii</option>
+                <option value="ID">Idaho</option>
+                <option value="IL">Illinois</option>
+                <option value="IN">Indiana</option>
+                <option value="IA">Iowa</option>
+                <option value="KS">Kansas</option>
+                <option value="KY">Kentucky</option>
+                <option value="LA">Louisiana</option>
+                <option value="ME">Maine</option>
+                <option value="MD">Maryland</option>
+                <option value="MA">Massachusetts</option>
+                <option value="MI">Michigan</option>
+                <option value="MN">Minnesota</option>
+                <option value="MS">Mississippi</option>
+                <option value="MO">Missouri</option>
+                <option value="MT">Montana</option>
+                <option value="NE">Nebraska</option>
+                <option value="NV">Nevada</option>
+                <option value="NH">New Hampshire</option>
+                <option value="NJ">New Jersey</option>
+                <option value="NM">New Mexico</option>
+                <option value="NY" selected>New York</option>
+                <option value="NC">North Carolina</option>
+                <option value="ND">North Dakota</option>
+                <option value="OH">Ohio</option>
+                <option value="OK">Oklahoma</option>
+                <option value="OR">Oregon</option>
+                <option value="PA">Pennsylvania</option>
+                <option value="RI">Rhode Island</option>
+                <option value="SC">South Carolina</option>
+                <option value="SD">South Dakota</option>
+                <option value="TN">Tennessee</option>
+                <option value="TX">Texas</option>
+                <option value="UT">Utah</option>
+                <option value="VT">Vermont</option>
+                <option value="VA">Virginia</option>
+                <option value="WA">Washington</option>
+                <option value="WV">West Virginia</option>
+                <option value="WI">Wisconsin</option>
+                <option value="WY">Wyoming</option>
+              </select>
+            </div>
+            <div class="field non-usa-field hidden">
+              <label for="flatTaxRate">Income tax rate (%/yr, flat)</label>
+              <input type="number" id="flatTaxRate" min="0" max="60" step="0.1" value="20" />
+            </div>
+          </div>
+        </section>
+
+        <!-- Wealth Sources -->
+        <section class="tab-panel" data-panel="wealth">
+          <p class="panel-hint">Current value of what you own today (not retirement accounts — those are on a later tab). Stocks and cash are assumed spendable in retirement; business and investment-property equity count toward your net worth but are treated as illiquid and aren't drawn down for living expenses in the projection. Investment-property equity does grow at the real estate appreciation rate below (business equity is assumed to stay flat).</p>
+          <div class="grid">
+            <div class="field">
+              <label for="stocks">Stocks / brokerage</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="stocks" value="0" /></div>
+            </div>
+            <div class="field">
+              <label for="cash">Cash / savings</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="cash" value="0" /></div>
+            </div>
+            <div class="field">
+              <label for="business">Business equity</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="business" value="0" /></div>
+            </div>
+            <div class="field">
+              <label for="investmentProperties">Investment properties (equity)</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="investmentProperties" value="0" /></div>
+            </div>
+            <div class="field">
+              <label for="realEstateAppreciation">Real estate appreciation (%/yr)</label>
+              <input type="number" id="realEstateAppreciation" min="0" max="15" step="0.1" value="4" />
+            </div>
+          </div>
+        </section>
+
+        <!-- Debts -->
+        <section class="tab-panel" data-panel="debts">
+          <p class="panel-hint">What you currently owe. Subtracted from your net worth.</p>
+          <div class="grid">
+            <div class="field">
+              <label for="loans">Loans / debt owed (total balance)</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="loans" value="0" /></div>
+            </div>
+          </div>
+
+          <p class="panel-hint" style="margin-top: 18px;">Monthly loan repayments — used to add each debt's payment to your expenses until it's paid off (then it drops out automatically).</p>
+          <div class="grid">
+            <div class="field">
+              <label for="mortgagePayment">Mortgage payment ($/mo)</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="mortgagePayment" value="0" /></div>
+            </div>
+            <div class="field">
+              <label for="mortgageMonthsLeft">Mortgage months remaining</label>
+              <input type="number" id="mortgageMonthsLeft" min="0" max="600" value="0" />
+            </div>
+            <div class="field">
+              <label for="carLoanPayment">Car loan payment ($/mo)</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="carLoanPayment" value="0" /></div>
+            </div>
+            <div class="field">
+              <label for="carLoanMonthsLeft">Car loan months remaining</label>
+              <input type="number" id="carLoanMonthsLeft" min="0" max="120" value="0" />
+            </div>
+            <div class="field">
+              <label for="studentLoanPayment">Student loan payment ($/mo)</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="studentLoanPayment" value="0" /></div>
+            </div>
+            <div class="field">
+              <label for="studentLoanMonthsLeft">Student loan months remaining</label>
+              <input type="number" id="studentLoanMonthsLeft" min="0" max="360" value="0" />
+            </div>
+            <div class="field">
+              <label for="consumerDebtPayment">Consumer debt payment ($/mo)</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="consumerDebtPayment" value="0" /></div>
+            </div>
+            <div class="field">
+              <label for="consumerDebtMonthsLeft">Consumer debt months remaining</label>
+              <input type="number" id="consumerDebtMonthsLeft" min="0" max="120" value="0" />
+            </div>
+          </div>
+        </section>
+
+        <!-- Income -->
+        <section class="tab-panel" data-panel="income">
+          <p class="panel-hint">Current annual income by source (for context and savings estimates).</p>
+          <div class="grid">
+            <div class="field">
+              <label for="w2Income">W2 income ($/yr)</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="w2Income" value="0" /></div>
+            </div>
+            <div class="field">
+              <label for="rentalIncome">Rental income ($/yr)</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="rentalIncome" value="0" /></div>
+            </div>
+            <div class="field">
+              <label for="dividends">Dividends ($/yr)</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="dividends" value="0" /></div>
+            </div>
+            <div class="field">
+              <label for="otherIncome">Other income ($/yr)</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="otherIncome" value="0" /></div>
+            </div>
+            <div class="field">
+              <label for="annualSavings">Amount invested / saved per year</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="annualSavings" value="0" /></div>
+            </div>
+            <div class="field">
+              <label for="currentLivingCost">Current living costs ($/mo, for reference)</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="currentLivingCost" value="0" /></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Retirement Accounts -->
+        <section class="tab-panel" data-panel="accounts">
+          <p class="panel-hint">An HSA is a single shared account per household — unlike the 401(k)/Roth/IRA fields below, there's no separate spouse HSA. When married, this becomes a <strong>Family HSA</strong> and its balance is used to cover medical costs for both spouses.</p>
+          <div class="grid">
+            <div class="field">
+              <label for="k401Balance">401(k) balance</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="k401Balance" value="0" /></div>
+            </div>
+            <div class="field">
+              <label for="k401Contribution">401(k) contribution ($/yr)</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="k401Contribution" value="0" /></div>
+            </div>
+            <div class="field">
+              <label for="rothBalance">Roth IRA balance</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="rothBalance" value="0" /></div>
+            </div>
+            <div class="field">
+              <label for="rothContribution">Roth IRA contribution ($/yr)</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="rothContribution" value="0" /></div>
+            </div>
+            <div class="field">
+              <label for="iraBalance">Traditional IRA balance</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="iraBalance" value="0" /></div>
+            </div>
+            <div class="field">
+              <label for="iraContribution">Traditional IRA contribution ($/yr)</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="iraContribution" value="0" /></div>
+            </div>
+            <div class="field">
+              <label for="hsaBalance" id="hsaBalanceLabel">HSA balance</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="hsaBalance" value="0" /></div>
+            </div>
+            <div class="field">
+              <label for="hsaContribution" id="hsaContributionLabel">HSA contribution ($/yr)</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="hsaContribution" value="0" /></div>
+            </div>
+            <div class="field">
+              <label for="ssMonthly">Estimated Social Security ($/mo at start)</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="ssMonthly" value="0" /></div>
+            </div>
+            <div class="field">
+              <label for="ssStartAge">Social Security start age</label>
+              <input type="number" id="ssStartAge" min="62" max="70" value="67" />
+            </div>
+            <p class="panel-hint spouse-field" style="grid-column: 1 / -1; margin: 4px 0 -4px;">Spouse's retirement accounts &amp; Social Security</p>
+            <div class="field spouse-field">
+              <label for="spouse401kBalance">Spouse 401(k) balance</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="spouse401kBalance" value="0" /></div>
+            </div>
+            <div class="field spouse-field">
+              <label for="spouse401kContribution">Spouse 401(k) contribution ($/yr)</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="spouse401kContribution" value="0" /></div>
+            </div>
+            <div class="field spouse-field">
+              <label for="spouseRothBalance">Spouse Roth IRA balance</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="spouseRothBalance" value="0" /></div>
+            </div>
+            <div class="field spouse-field">
+              <label for="spouseRothContribution">Spouse Roth IRA contribution ($/yr)</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="spouseRothContribution" value="0" /></div>
+            </div>
+            <div class="field spouse-field">
+              <label for="spouseIraBalance">Spouse Traditional IRA balance</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="spouseIraBalance" value="0" /></div>
+            </div>
+            <div class="field spouse-field">
+              <label for="spouseIraContribution">Spouse Traditional IRA contribution ($/yr)</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="spouseIraContribution" value="0" /></div>
+            </div>
+            <div class="field spouse-field">
+              <label for="spouseSsMonthly">Spouse estimated Social Security ($/mo at start)</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="spouseSsMonthly" value="0" /></div>
+            </div>
+            <div class="field spouse-field">
+              <label for="spouseSsStartAge">Spouse Social Security start age</label>
+              <input type="number" id="spouseSsStartAge" min="62" max="70" value="67" />
+            </div>
+          </div>
+        </section>
+
+        <!-- Healthcare -->
+        <section class="tab-panel" data-panel="healthcare">
+          <p class="panel-hint">Employer coverage is assumed while you're still working. These costs kick in once you retire. Defaults are national averages per person — if married, the cost is applied to each spouse based on their own age relative to Medicare eligibility.</p>
+          <div class="grid">
+            <div class="field">
+              <label for="preMedicareHealth">Health insurance before Medicare ($/mo per person, today's dollars)</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="preMedicareHealth" value="700" /></div>
+            </div>
+            <div class="field">
+              <label for="medicareAge">Medicare eligibility age</label>
+              <input type="number" id="medicareAge" min="60" max="70" value="65" />
+            </div>
+            <div class="field">
+              <label for="medicareMonthly">Medicare + supplemental ($/mo per person, today's dollars)</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="medicareMonthly" value="400" /></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Goals -->
+        <section class="tab-panel" data-panel="goals">
+          <p class="panel-hint">Any remaining loan payments from the Debts tab are added on top of this automatically, for as long as those loans are still being paid off.</p>
+          <div class="grid">
+            <div class="field">
+              <label for="monthlyIncomeNeeded">Monthly income needed in retirement (today's dollars)</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="monthlyIncomeNeeded" value="6000" required /></div>
+            </div>
+            <div class="field">
+              <label for="preReturn">Expected return before retirement (%/yr)</label>
+              <input type="number" id="preReturn" min="0" max="20" step="0.1" value="7" />
+            </div>
+            <div class="field">
+              <label for="postReturn">Expected return during retirement (%/yr)</label>
+              <input type="number" id="postReturn" min="0" max="20" step="0.1" value="5" />
+            </div>
+            <div class="field">
+              <label for="inflation">Inflation rate (%/yr)</label>
+              <input type="number" id="inflation" min="0" max="15" step="0.1" value="3" />
+            </div>
+          </div>
+
+          <p class="panel-hint" style="margin-top: 18px;">People tend to spend more on travel in the early, active ("go-go") years of retirement, then less later on. This budget is added on top of your monthly income need for that stretch, then drops to $0.</p>
+          <div class="grid">
+            <div class="field">
+              <label for="travelBudget">Travel budget during go-go years ($/yr, today's dollars)</label>
+              <div class="money-input"><span class="prefix">$</span><input type="text" inputmode="decimal" class="money" id="travelBudget" value="30000" /></div>
+            </div>
+            <div class="field">
+              <label for="travelYears">Go-go years (after retiring)</label>
+              <input type="number" id="travelYears" min="0" max="40" value="15" />
+            </div>
+          </div>
+        </section>
+        </div>
+
+        <input type="file" id="loadFileInput" accept="application/json,.json" class="hidden" />
+
+        <div class="actions">
+          <button type="button" id="resetBtn" class="btn-secondary">Reset for new person</button>
+          <div class="actions-primary">
+            <button type="button" id="loadFileBtn" class="btn-secondary">Load from file</button>
+            <button type="submit" class="btn-primary">Calculate</button>
+          </div>
+        </div>
+        <p class="load-status" id="loadStatus"></p>
+        </div>
+      </form>
+
+      <div class="panel results" id="results">
+        <div class="placeholder" id="placeholder">
+          <p>Fill in your details and click <strong>Calculate</strong> to see your retirement projection.</p>
+        </div>
+
+        <div id="results-content" class="hidden">
+          <p class="save-status" id="saveStatus"></p>
+
+          <nav class="tabs result-tabs" role="tablist">
+            <button type="button" class="result-tab active" data-rtab="overview">Overview</button>
+            <button type="button" class="result-tab" data-rtab="income">Income in Retirement</button>
+            <button type="button" class="result-tab" data-rtab="table">Year-by-Year</button>
+            <button type="button" class="result-tab" data-rtab="monthly">Monthly Detail</button>
+          </nav>
+
+          <section class="result-tab-panel active" data-rpanel="overview">
+            <div class="verdict" id="verdict"></div>
+
+            <div class="stat-row">
+              <div class="stat">
+                <span class="stat-label">Net worth today</span>
+                <span class="stat-value" id="statNetWorth">—</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Projected balance at retirement</span>
+                <span class="stat-value" id="statAtRetirement">—</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Monthly need at retirement (inflated)</span>
+                <span class="stat-value" id="statMonthlyNeed">—</span>
+              </div>
+            </div>
+
+            <div class="chart-wrap">
+              <canvas id="chart"></canvas>
+            </div>
+
+            <h3 class="section-heading" id="remainingHeading">What's left</h3>
+            <div class="remaining-grid">
+              <div>
+                <p class="panel-hint" style="margin-top: 0;">Wealth sources</p>
+                <div class="table-wrap">
+                  <table id="remainingWealthTable">
+                    <thead><tr><th>Source</th><th>Remaining</th></tr></thead>
+                    <tbody id="remainingWealthTableBody"></tbody>
+                  </table>
+                </div>
+              </div>
+              <div>
+                <p class="panel-hint" style="margin-top: 0;">Income sources</p>
+                <div class="table-wrap">
+                  <table id="remainingIncomeTable">
+                    <thead><tr><th>Source</th><th>Status</th></tr></thead>
+                    <tbody id="remainingIncomeTableBody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="result-tab-panel" data-rpanel="income">
+            <p class="panel-hint">How your spending in retirement gets paid for each year — guaranteed Social Security income vs. money withdrawn, broken down by which account it's suggested to come from. Withdrawal amounts below include the estimated tax owed on that income (see the Tax column on the Year-by-Year tab) — not just your spending need.</p>
+
+            <div class="stat-row">
+              <div class="stat">
+                <span class="stat-label">Total Social Security (lifetime)</span>
+                <span class="stat-value" id="statTotalSS">—</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Total other income (lifetime)</span>
+                <span class="stat-value" id="statTotalOtherIncome">—</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Total portfolio withdrawals (lifetime)</span>
+                <span class="stat-value" id="statTotalWithdrawal">—</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Share covered by guaranteed income</span>
+                <span class="stat-value" id="statSSShare">—</span>
+              </div>
+            </div>
+
+            <div class="withdrawal-order-hint">
+              <h3 class="section-heading">Suggested withdrawal order</h3>
+              <ol>
+                <li><strong>HSA</strong> — for that year's healthcare costs only. Withdrawals for medical expenses are the one way HSA funds come out completely tax-free.</li>
+                <li><strong>Cash / savings</strong> — already-taxed money, spend it first so everything else keeps compounding.</li>
+                <li><strong>Brokerage (stocks)</strong> — taxable, but usually at preferential capital-gains rates.</li>
+                <li><strong>401(k) / Traditional IRA</strong> — taxed as ordinary income when withdrawn.</li>
+                <li><strong>Roth IRA</strong> — saved for last: it's tax-free, has no required withdrawals, and is the best asset to leave growing (or to leave as a legacy).</li>
+              </ol>
+              <p class="panel-hint">Business equity and investment-property equity count toward your net worth but aren't included here — they're treated as illiquid and aren't assumed to fund retirement withdrawals.</p>
+            </div>
+
+            <div class="chart-wrap">
+              <canvas id="incomeChart"></canvas>
+            </div>
+
+            <h3 class="section-heading">Lifetime totals by source</h3>
+            <div class="table-wrap">
+              <table id="withdrawalSourceTable">
+                <thead>
+                  <tr>
+                    <th>Source</th>
+                    <th>Total withdrawn</th>
+                  </tr>
+                </thead>
+                <tbody id="withdrawalSourceTableBody"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="result-tab-panel" data-rpanel="table">
+            <h3 class="section-heading">Year-by-year detail</h3>
+            <div class="table-wrap">
+              <table id="yearTable">
+                <thead>
+                  <tr>
+                    <th data-tooltip="Your age at this point in the plan.">Age</th>
+                    <th data-tooltip="Total spendable balance — cash, brokerage, 401(k)/IRA, Roth, and HSA — at the start of this year. Business and investment-property equity are excluded as illiquid.">Balance (start)</th>
+                    <th data-tooltip="Total money coming in this year: W2 + rental + dividends + other income before retirement, or rental + dividends + other income + Social Security + total withdrawal (including the portion paid out in tax) after retirement.">Income</th>
+                    <th data-tooltip="Rental income, dividends, and other income — unlike W2 income, these don't stop at retirement and keep reducing how much you need to withdraw.">Other income</th>
+                    <th data-tooltip="Total added to savings/retirement accounts this year: annual savings plus 401(k), Roth, Traditional IRA, and HSA contributions.">Contribution</th>
+                    <th data-tooltip="Before retirement: your reported current living costs, inflation-adjusted — shown for reference only, already netted out of the savings you reported. After retirement: based on 'Monthly income needed in retirement' (Goals tab), inflation-adjusted — this is what actually drives your withdrawal need.">Living costs</th>
+                    <th data-tooltip="Extra travel spending during the active 'go-go' years of retirement. Inflated each year, then drops to $0 once your go-go years are up.">Travel</th>
+                    <th data-tooltip="Remaining mortgage, car loan, student loan, and consumer debt payments still due this year — drops out once each loan's term ends.">Debt payments</th>
+                    <th data-tooltip="Health insurance costs: private/COBRA-style premiums before Medicare eligibility, then Medicare + supplemental afterward.">Healthcare</th>
+                    <th data-tooltip="Combined Social Security income received this year, for you (and your spouse, if married) once each has started benefits.">Social Security</th>
+                    <th data-tooltip="Investment growth this year, applied to the balance at the start of the year using your expected rate of return.">Growth</th>
+                    <th data-tooltip="Total amount withdrawn from your accounts this year — to cover expenses beyond Social Security, plus the tax owed on that income (see the Tax column).">Withdrawal</th>
+                    <th data-tooltip="Estimated income tax on this year's income, by source: ordinary rates on rental/other income, taxable Social Security, and 401(k)/IRA withdrawals; long-term capital-gains rates (or your flat % if outside the US) on dividends and the brokerage withdrawal. Cash, Roth, and HSA withdrawals are tax-free. Hover a Tax cell for the per-source breakdown. Simplified: standard deduction only, no cost-basis tracking, single-pass (doesn't re-tax the extra withdrawal drawn to cover this bill).">Tax</th>
+                    <th data-tooltip="Spendable balance at the end of this year, after growth and withdrawals (shown as $0 if the plan has run out of money).">Balance (end)</th>
+                    <th data-tooltip="This year's withdrawal as a percentage of the balance at the start of the year — how fast you're drawing down your funds.">Burn rate</th>
+                  </tr>
+                </thead>
+                <tbody id="yearTableBody"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="result-tab-panel" data-rpanel="monthly">
+            <p class="panel-hint">A typical month in each age-year of the plan — what it costs, and where the money to cover it comes from — plus that year's totals.</p>
+            <div class="table-wrap">
+              <table id="monthlyTable">
+                <thead>
+                  <tr>
+                    <th rowspan="2">Age</th>
+                    <th colspan="5">Expenses (per month)</th>
+                    <th colspan="5">Income (per month)</th>
+                    <th colspan="2">Yearly totals</th>
+                  </tr>
+                  <tr>
+                    <th>Living</th>
+                    <th>Travel</th>
+                    <th>Healthcare</th>
+                    <th>Debt</th>
+                    <th>Total</th>
+                    <th>W2</th>
+                    <th>Other (rental/div/other)</th>
+                    <th>Social Security</th>
+                    <th>Withdrawal</th>
+                    <th>Total</th>
+                    <th>Expenses</th>
+                    <th>Income</th>
+                  </tr>
+                </thead>
+                <tbody id="monthlyTableBody"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,664 @@
+:root {
+  --bg: #0f1524;
+  --bg-soft: #161d31;
+  --panel: #1b2338;
+  --panel-border: #2a3450;
+  --text: #eef1f8;
+  --text-dim: #9aa4bf;
+  --accent: #5b8def;
+  --accent-soft: rgba(91, 141, 239, 0.15);
+  --good: #34d399;
+  --good-soft: rgba(52, 211, 153, 0.12);
+  --bad: #f87171;
+  --bad-soft: rgba(248, 113, 113, 0.12);
+  --radius: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(circle at top, #182036 0%, #0b0f1a 70%);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+.app {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.app-header h1 {
+  font-size: 2rem;
+  margin: 0 0 6px;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  color: var(--text-dim);
+  margin: 0;
+  font-size: 0.98rem;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 20px;
+  align-items: start;
+  transition: grid-template-columns 0.2s ease;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Minimized input panel: keeps inputs and results side by side, just with
+   the input column shrunk to a thin strip holding only the expand button. */
+.layout.inputs-collapsed {
+  grid-template-columns: 52px 1fr;
+}
+
+@media (max-width: 900px) {
+  .layout.inputs-collapsed {
+    grid-template-columns: 1fr;
+  }
+}
+
+.layout.inputs-collapsed #calc-form {
+  padding: 12px 6px;
+  display: flex;
+  justify-content: center;
+}
+
+.layout.inputs-collapsed .panel-header,
+.layout.inputs-collapsed .calc-form-body {
+  display: none;
+}
+
+.layout.inputs-collapsed .expand-btn {
+  display: flex;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.panel-title {
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+.icon-btn {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  background: var(--bg-soft);
+  border: 1px solid var(--panel-border);
+  color: var(--text);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.icon-btn:hover {
+  border-color: var(--accent);
+  background: var(--panel);
+}
+
+.expand-btn {
+  display: none;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 20px;
+  background: var(--bg-soft);
+  padding: 6px;
+  border-radius: 10px;
+}
+
+.tab {
+  /* Fixed, equal width regardless of label length or which tab is active —
+     the nav shouldn't reflow when a tab is selected. Labels stay fully
+     readable (no ellipsis) — a tab that doesn't fit wraps to the next row
+     via .tabs' flex-wrap instead of truncating. */
+  flex: 1 1 0;
+  padding: 9px 8px;
+  border: none;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.tab:hover {
+  color: var(--text);
+}
+
+.tab.active {
+  background: var(--accent);
+  color: white;
+}
+
+/* Height is allowed to vary per tab — only the panel's width is fixed
+   (via .layout's grid columns, unaffected by which tab is selected). */
+.tab-panel {
+  display: none;
+  animation: fade 0.15s ease;
+}
+
+.tab-panel.active {
+  display: block;
+}
+
+.result-tabs {
+  margin-bottom: 18px;
+}
+
+.result-tab {
+  flex: 1 1 auto;
+  padding: 9px 12px;
+  border: none;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.result-tab:hover {
+  color: var(--text);
+}
+
+.result-tab.active {
+  background: var(--accent);
+  color: white;
+}
+
+.result-tab-panel {
+  display: none;
+  animation: fade 0.15s ease;
+}
+
+.result-tab-panel.active {
+  display: block;
+}
+
+@keyframes fade {
+  from { opacity: 0; transform: translateY(2px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.panel-hint {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  margin: -4px 0 16px;
+}
+
+.withdrawal-order-hint {
+  background: var(--bg-soft);
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin-bottom: 18px;
+}
+
+.withdrawal-order-hint ol {
+  margin: 8px 0;
+  padding-left: 20px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.withdrawal-order-hint li {
+  margin-bottom: 4px;
+}
+
+.withdrawal-order-hint .panel-hint {
+  margin: 8px 0 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px 16px;
+}
+
+@media (max-width: 520px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field label {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  font-weight: 500;
+}
+
+.field input,
+.field select {
+  background: var(--bg-soft);
+  border: 1px solid var(--panel-border);
+  color: var(--text);
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.field input:focus,
+.field select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.money-input {
+  display: flex;
+  align-items: center;
+  background: var(--bg-soft);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding-left: 12px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.money-input:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.money-input .prefix {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+}
+
+.money-input input {
+  border: none;
+  background: transparent;
+  padding: 10px 12px 10px 4px;
+  flex: 1;
+  min-width: 0;
+  color: var(--text);
+  font-size: 0.95rem;
+  outline: none;
+  box-shadow: none !important;
+}
+
+.actions {
+  margin-top: 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.actions-primary {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--panel-border);
+  padding: 12px 20px;
+  border-radius: 9px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent);
+  background: var(--bg-soft);
+}
+
+.load-status {
+  color: var(--text-dim);
+  font-size: 0.78rem;
+  margin: 10px 0 0;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 12px 26px;
+  border-radius: 9px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.15s, transform 0.05s;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.08);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.results {
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+}
+
+.placeholder {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dim);
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 0.95rem;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.save-status {
+  color: var(--text-dim);
+  font-size: 0.78rem;
+  margin: 0 0 10px;
+}
+
+.verdict {
+  padding: 16px 18px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 18px;
+  line-height: 1.4;
+}
+
+.verdict.good {
+  background: var(--good-soft);
+  color: var(--good);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+}
+
+.verdict.bad {
+  background: var(--bad-soft);
+  color: var(--bad);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+}
+
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 640px) {
+  .stat-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stat {
+  background: var(--bg-soft);
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-label {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.stat-value {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.chart-wrap {
+  flex: 1;
+  min-height: 300px;
+  position: relative;
+}
+
+.section-heading {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  margin: 22px 0 10px;
+  font-weight: 600;
+}
+
+.table-wrap {
+  overflow: auto;
+  max-height: 420px;
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+}
+
+.remaining-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .remaining-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.remaining-grid .table-wrap {
+  max-height: 260px;
+}
+
+#yearTable,
+#withdrawalSourceTable,
+#monthlyTable,
+#remainingWealthTable,
+#remainingIncomeTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+#yearTable th,
+#yearTable td,
+#withdrawalSourceTable th,
+#withdrawalSourceTable td,
+#monthlyTable th,
+#monthlyTable td,
+#remainingWealthTable th,
+#remainingWealthTable td,
+#remainingIncomeTable th,
+#remainingIncomeTable td {
+  padding: 7px 12px;
+  text-align: right;
+  border-bottom: 1px solid var(--panel-border);
+}
+
+#yearTable th:first-child,
+#yearTable td:first-child,
+#withdrawalSourceTable th:first-child,
+#withdrawalSourceTable td:first-child,
+#monthlyTable th:first-child,
+#monthlyTable td:first-child,
+#remainingWealthTable th:first-child,
+#remainingWealthTable td:first-child,
+#remainingIncomeTable th:first-child,
+#remainingIncomeTable td:first-child {
+  text-align: left;
+}
+
+#yearTable thead th,
+#withdrawalSourceTable thead th,
+#monthlyTable thead th,
+#remainingWealthTable thead th,
+#remainingIncomeTable thead th {
+  color: var(--text-dim);
+  text-transform: uppercase;
+  font-size: 0.65rem;
+  letter-spacing: 0.03em;
+  background: var(--bg-soft);
+  position: sticky;
+  top: 0;
+}
+
+#monthlyTable thead tr:first-child th {
+  text-align: center;
+  border-bottom: 1px solid var(--panel-border);
+}
+
+#yearTable tbody tr:last-child td,
+#withdrawalSourceTable tbody tr:last-child td,
+#monthlyTable tbody tr:last-child td,
+#remainingWealthTable tbody tr:last-child td,
+#remainingIncomeTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+#yearTable tr.retire-marker td {
+  border-top: 2px dashed var(--accent);
+}
+
+#yearTable tr.depleted td {
+  color: var(--bad);
+}
+
+#yearTable th[data-tooltip] {
+  position: relative;
+  cursor: help;
+  text-decoration: underline dotted var(--panel-border);
+  text-underline-offset: 3px;
+}
+
+#yearTable th[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 6px;
+  width: 200px;
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 0.72rem;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+  white-space: normal;
+  line-height: 1.4;
+  z-index: 20;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+
+#yearTable th[data-tooltip]:first-child:hover::after {
+  left: 0;
+  transform: none;
+}
+
+#yearTable th[data-tooltip]:last-child:hover::after {
+  left: auto;
+  right: 0;
+  transform: none;
+}
+
+#yearTable td[data-tooltip] {
+  position: relative;
+  cursor: help;
+}
+
+#yearTable td[data-tooltip]:hover {
+  background: var(--bg-soft);
+}
+
+#yearTable td[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 4px;
+  width: 240px;
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 0.72rem;
+  font-weight: 400;
+  white-space: normal;
+  line-height: 1.4;
+  z-index: 25;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+
+#yearTable td[data-tooltip]:first-child:hover::after {
+  left: 0;
+  transform: none;
+}
+
+#yearTable td[data-tooltip]:last-child:hover::after {
+  left: auto;
+  right: 0;
+  transform: none;
+}

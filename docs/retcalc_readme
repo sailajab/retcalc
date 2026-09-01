@@ -1,0 +1,80 @@
+Create a retirement calculator
+Have inputs for the standard fields like 
+age
+gender
+married?
+wealth shources
+stocks
+cash
+business
+loans
+w2 incmoe
+rentals
+dividends
+etc any other income
+Better to have some tabs and gorup the incomesources
+Then factor social security 
+401k
+
+any other income etc
+ROTH
+IRA
+
+Also ask what is the age to retire
+how much monthly income needd in the retirement
+
+Lets start with this and we will add more later
+We need to plot howmuch money it takes
+If someone has enuugh money or how they can spend it
+
+--- Follow-up instructions ---
+
+Make all money inputs or putputs in US$ format
+Keep my input for the session in the browser storage. Don't save anything on the server.
+
+Lets take it up a notch. Lets do a detailed plan.
+
+Add health care current premiums as defaults for medicare and private insurance if retiring age is before 65 since employer provided insurance won't be there.
+Add detailed inputs for spouse separately if spouse is working and has 401k and IRA, social security etc.
+Assume standard expected rate of return for market, conservatively.
+Calculate and display living costs before retiring age as well.
+
+Save the user inputs into a JSON file automatically whenever the user presses the CAlcualte button, keep updating the same file. 
+Save it in the Downloads folder clearly named. Display the location of the file to the user. 
+
+Create tabs on the calculations to show more details. Make the tabs clickable and take the user to that details. One tab should be how the income is calculated and where its coming from after retirement.
+Take a nickname as user input and prefix that name in the file saved.
+
+In the Income in Retirement tab, suggest the best way to withdraw. Which account - cash, brokerage or 401K, IRA or Roth to withdraw from and when.
+
+Have you considered loan repayments? In Debt, take mortgage, car loan, student loan and consumer debt as inputs per month and how many more months to finish.
+Take into account if generally people spend less in the later years because they would stop traveling. In the initial go-go years, budget $30000 per year for travel.
+Add another tab to explain in detail the expenses per month. And show expenses per month and where we get income from. Show one month per year with yearly totals per each age year.
+
+In the year-by-year view, add tooltip explaning each column when hovered on each column heading
+In the Overview tab, show what will be left of each wealth source and income source.
+
+Take family HSA as input and factor that into the calculations
+Consider that only W2 stops at the retirement age. The other sources of income continue into retirement.
+
+In the year-by-year tab, when hovered over each row, and each column, show the breakdown of total in that value.
+If there are values when the page is loaded, calculate and populate by default without the user hitting the calculate button.
+
+For investment properties, add appreciation at the current market projected rate for realestate
+
+Consider Monthly income needed in retirement input in calculations 
+Make the input tabs of fixed width. Don't make the input container resize. Don't like it resizing anytime there is a different tab selected on the calculations side.
+Add an icon to minimize the inputs area and give an expand button for the user to enter. 
+Show the inputs and calculations side by side.
+
+Create a button to reset the inputs for a new person's entries. But keep the generic defaults. 
+Show the input tabs fully, not ellipses.
+The input are height can be variable. Only the width should be fixed.
+
+Consider other income as well in the total income. 
+Factor the tax bracket into the calculations by the income source. Add a tax column in the year-by-year table.
+When hovered on each tax cell, show the breakdown of the tax per income source. 
+In personal, take input state in USA. If not USA, take tax % as input to do the tax calculations.
+
+Make sure all the calculations are correct. Fix any bugs.
+
